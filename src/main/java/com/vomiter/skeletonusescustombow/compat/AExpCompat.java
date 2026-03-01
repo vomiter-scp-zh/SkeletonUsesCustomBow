@@ -17,4 +17,8 @@ public class AExpCompat {
             bow.archeryexp$getParticles().forEach(particle -> particle.apply(skeleton));
         }
     }
+
+    public static boolean isAExpBow(ItemStack stack){
+        return stack.getItem() instanceof IBowProperties bow && bow.archeryexp$isSpecial();
+    }
 }

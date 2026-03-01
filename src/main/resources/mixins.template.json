@@ -7,6 +7,7 @@
     "AbstractSkeletonMixin",
     "RangedBowAttackGoalMixin",
     "ServerLevelMixin",
+    "MobBowPriorityMixin",
     "compat.WrathOfTheDesertMixin"
   ],
   "client": [

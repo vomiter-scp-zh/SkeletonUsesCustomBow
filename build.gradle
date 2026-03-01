@@ -50,10 +50,3 @@ dependencies {
 }
 
 //devRuntime.project(":common", true)
-
-/*
-/summon piglin ~ ~ ~ {IsImmuneToZombification:1,HandItems:[{id:crossbow,Count:1},{}]}
-/summon piglin ~ ~ ~ {IsImmuneToZombification:1,HandItems:[{id:diamond_axe,Count:1},{}]}
-/summon piglin ~ ~ ~ {IsImmuneToZombification:1, NoAI:1b}
-/summon hoglin ~ ~ ~ {IsImmuneToZombification:1,NoAI:1b}
- */

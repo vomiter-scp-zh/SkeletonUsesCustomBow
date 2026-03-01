@@ -21,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -65,6 +66,7 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         ItemStack weapon = BowLikeHelper.getBowLikeInHand((AbstractSkeleton)(Object)this);
         if (weapon.isEmpty()) return;
         if (weapon.is(Items.BOW)) return;
+        if (AExpCompat.isAExpBow(weapon)) return;
 
         if (sucb$player == null) sucb$player = SkeletonFakePlayer.createFakePlayer((AbstractSkeleton)(Object)this);
 
@@ -103,4 +105,6 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         if(cir.getReturnValue()) return;
         cir.setReturnValue(projectileWeaponItem instanceof BowItem);
     }
+
+
 }

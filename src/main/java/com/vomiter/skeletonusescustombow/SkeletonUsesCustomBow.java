@@ -5,6 +5,9 @@ import com.vomiter.skeletonusescustombow.core.bowlike.AlexCavesDreadbowAdapter;
 import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeAdapters;
 import com.vomiter.skeletonusescustombow.core.bowlike.CataclysmBowAdapter;
 import com.vomiter.skeletonusescustombow.core.bowlike.VanillaBowAdapter;
+import com.vomiter.skeletonusescustombow.data.BowDataManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +27,8 @@ public class SkeletonUsesCustomBow
         IEventBus modBus = context.getModEventBus();
         modBus.addListener(this::commonSetup);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        forgeBus.addListener(this::onAddReloadListeners);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -34,13 +39,18 @@ public class SkeletonUsesCustomBow
         });
     }
 
+    private void onAddReloadListeners(AddReloadListenerEvent e){
+        e.addListener(new BowDataManager());
+    }
+
     /*
 /summon skeleton ~ ~ ~ {HandItems:[{id:"archeryexp:diamond_bow",Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}]}
 /summon skeleton ~ ~ ~ {HandItems:[{id:"cataclysm:cursed_bow",Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}]}
 /summon skeleton ~ ~ ~ {HandItems:[{id:"cataclysm:wrath_of_the_desert",Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}]}
 /summon skeleton ~ ~ ~ {HandItems:[{id:"kubejs:bow_golden",Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}]}
 /summon skeleton ~ ~ ~ {HandItems:[{id:"alexscaves:dreadbow",Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}]}
-/summon skeleton ~ ~ ~ {HandItems:[{id:bow,Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}]}
+/summon skeleton ~ ~ ~ {HandItems:[{id:bow,Count:1},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}], CanPickUpLoot:1b}
+/summon skeleton ~ ~ ~ {HandItems:[{},{}],ArmorItems:[{},{},{},{id:iron_helmet,Count:1}], CanPickUpLoot:1b}
      */
 
 }
