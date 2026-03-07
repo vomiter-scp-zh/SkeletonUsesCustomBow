@@ -5,6 +5,7 @@ import com.vomiter.skeletonusescustombow.core.IFakePlayerHolder;
 import com.vomiter.skeletonusescustombow.core.SkeletonFakePlayer;
 import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeAdapters;
 import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeHelper;
+import com.vomiter.skeletonusescustombow.data.BowDataManager;
 import com.vomiter.skeletonusescustombow.util.ShootContext;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
@@ -72,9 +73,9 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
 
         try {
             ShootContext.OWNER.set((AbstractSkeleton)(Object)this);
-
             sucb$player.readyToShoot();
-            BowLikeAdapters.release(weapon, serverLevel, sucb$player, 20); // useTicks
+            var weaponId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
+            BowLikeAdapters.release(weapon, serverLevel, sucb$player, BowDataManager.getChargeTime(weaponId)); // useTicks
             if(ModList.get().isLoaded("archeryexp")) AExpCompat.applyEffects(weapon, (AbstractSkeleton)(Object)this);
 
         } finally {
@@ -87,13 +88,11 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
     private void useOtherBow(CallbackInfo ci){
         if (this.level() != null && !this.level().isClientSide) {
             boolean shouldUseBow = !BowLikeHelper.getBowLikeInHand((AbstractSkeleton) (Object)this).isEmpty();
+            ItemStack weapon = BowLikeHelper.getBowLikeInHand((AbstractSkeleton)(Object)this);
+            var weaponId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
             if(shouldUseBow){
                 this.goalSelector.removeGoal(meleeGoal);
-                int i = 20;
-                if (this.level().getDifficulty() != Difficulty.HARD) {
-                    i = 40;
-                }
-
+                int i = this.level().getDifficulty() != Difficulty.HARD? BowDataManager.getPostShotDelay(weaponId): BowDataManager.getPostShotDelayHardMode(weaponId);
                 bowGoal.setMinAttackInterval(i);
                 this.goalSelector.addGoal(4, this.bowGoal);
             }

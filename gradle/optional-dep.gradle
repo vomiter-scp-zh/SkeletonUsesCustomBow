@@ -13,13 +13,4 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-
-    runtimeOnly fg.deobf("curse.maven:lionfish-api-1001614:5922047")
-    runtimeOnly fg.deobf("curse.maven:curios-309927:6418456")
-    compileOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
-    runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
-
-    compileOnly fg.deobf("curse.maven:archery-expansion-1164945:7171000")
-    runtimeOnly fg.deobf("curse.maven:archery-expansion-1164945:7171000")
-
 }

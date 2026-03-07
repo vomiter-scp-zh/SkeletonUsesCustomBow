@@ -34,7 +34,6 @@ public abstract class MobBowPriorityMixin extends LivingEntity {
         }
     }
 
-
     @Inject(method = "canReplaceCurrentItem", at = @At("TAIL"), cancellable = true)
     private void replaceBowLike(ItemStack picked, ItemStack holding, CallbackInfoReturnable<Boolean> cir){
         if(!((Object)this instanceof AbstractSkeleton)) return;
@@ -46,9 +45,8 @@ public abstract class MobBowPriorityMixin extends LivingEntity {
         if(isVanillaBow1 && isVanillaBow2) return;
         if(!isVanillaBow1 && !isVanillaBow2) return;
         boolean isBowLike1 = BowLikeAdapters.isBowLike(holding);
-        if(!isBowLike1) return;
         boolean isBowLike2 = BowLikeAdapters.isBowLike(picked);
-        if(!isBowLike2) return;
+        if(!isBowLike1 && !isBowLike2) return;
         ResourceLocation rl1 = ForgeRegistries.ITEMS.getKey(item1);
         ResourceLocation rl2 = ForgeRegistries.ITEMS.getKey(item2);
         if(BowDataManager.getPriority(rl2) > BowDataManager.getPriority(rl1)) cir.setReturnValue(true);
