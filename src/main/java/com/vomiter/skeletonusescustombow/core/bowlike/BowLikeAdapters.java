@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.infernalstudios.archeryexp.ArcheryExpansionForgeClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

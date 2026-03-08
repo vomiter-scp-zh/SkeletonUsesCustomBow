@@ -57,7 +57,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:lendercataclysm-551586:6906993")
 
     compileOnly fg.deobf("curse.maven:archery-expansion-1164945:7171000")
-    runtimeOnly fg.deobf("curse.maven:archery-expansion-1164945:7171000")
+    //runtimeOnly fg.deobf("curse.maven:archery-expansion-1164945:7171000")
 
 }
 
