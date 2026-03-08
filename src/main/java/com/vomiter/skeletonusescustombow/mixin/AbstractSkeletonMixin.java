@@ -1,6 +1,6 @@
 package com.vomiter.skeletonusescustombow.mixin;
 
-import com.vomiter.skeletonusescustombow.compat.AExpCompat;
+import com.vomiter.skeletonusescustombow.compat.AExpWrapper;
 import com.vomiter.skeletonusescustombow.core.IFakePlayerHolder;
 import com.vomiter.skeletonusescustombow.core.SkeletonFakePlayer;
 import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeAdapters;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -67,7 +66,7 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         ItemStack weapon = BowLikeHelper.getBowLikeInHand((AbstractSkeleton)(Object)this);
         if (weapon.isEmpty()) return;
         if (weapon.is(Items.BOW)) return;
-        if (AExpCompat.isAExpBow(weapon)) return;
+        if (AExpWrapper.isAExpBow(weapon)) return;
 
         if (sucb$player == null) sucb$player = SkeletonFakePlayer.createFakePlayer((AbstractSkeleton)(Object)this);
 
@@ -76,7 +75,7 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
             sucb$player.readyToShoot();
             var weaponId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
             BowLikeAdapters.release(weapon, serverLevel, sucb$player, BowDataManager.getChargeTime(weaponId)); // useTicks
-            if(ModList.get().isLoaded("archeryexp")) AExpCompat.applyEffects(weapon, (AbstractSkeleton)(Object)this);
+            AExpWrapper.applyEffects(weapon, (AbstractSkeleton)(Object)this);
 
         } finally {
             ShootContext.OWNER.remove();

@@ -1,7 +1,7 @@
 package com.vomiter.skeletonusescustombow.core.bowlike;
 
 import com.vomiter.skeletonusescustombow.SkeletonUsesCustomBow;
-import com.vomiter.skeletonusescustombow.compat.AExpCompat;
+import com.vomiter.skeletonusescustombow.compat.AExpWrapper;
 import com.vomiter.skeletonusescustombow.data.Tags;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -44,7 +44,7 @@ public final class BowLikeAdapters {
     public static @Nullable BowLikeAdapter find(ItemStack stack) {
         if (stack.isEmpty()) return null;
         if (stack.is(Tags.SKELETON_DO_NOT_USE)) return null;
-        if (AExpCompat.isAExpBow(stack)) return  null;
+        if (AExpWrapper.isAExpBow(stack)) return  null;
         ResourceLocation rl = ForgeRegistries.ITEMS.getKey(stack.getItem());
         BowLikeAdapter cached = CACHE.get(rl);
         if(cached == MISS) return null;
