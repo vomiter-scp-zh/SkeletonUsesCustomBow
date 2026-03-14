@@ -2,7 +2,7 @@ package com.vomiter.skeletonusescustombow.core.bowlike;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class CataclysmBowAdapter  implements BowLikeAdapter {
     static final String CATACLYSM = "cataclysm";
@@ -12,7 +12,7 @@ public class CataclysmBowAdapter  implements BowLikeAdapter {
 
     @Override
     public boolean matches(ItemStack stack) {
-        ResourceLocation rl = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation rl = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if(rl == null) return false;
         if(!CATACLYSM.equals(rl.getNamespace())) return false;
 

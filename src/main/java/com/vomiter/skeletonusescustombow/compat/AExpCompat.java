@@ -3,10 +3,11 @@ package com.vomiter.skeletonusescustombow.compat;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.item.ItemStack;
-import org.infernalstudios.archeryexp.common.effects.ArcheryEffects;
-import org.infernalstudios.archeryexp.util.mixinterfaces.IBowProperties;
+//import org.infernalstudios.archeryexp.common.effects.ArcheryEffects;
+//import org.infernalstudios.archeryexp.util.mixinterfaces.IBowProperties;
 
 public class AExpCompat {
+    /*
     public static MobEffect getAExpQuickDrawEffect(){
         return ArcheryEffects.QUICKDRAW_EFFECT.get();
     }
@@ -21,4 +22,6 @@ public class AExpCompat {
     public static boolean isAExpBow(ItemStack stack){
         return stack.getItem() instanceof IBowProperties bow && bow.archeryexp$isSpecial();
     }
+
+     */
 }

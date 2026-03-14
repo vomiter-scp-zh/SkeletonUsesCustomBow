@@ -4,12 +4,12 @@ import com.vomiter.skeletonusescustombow.Helpers;
 import com.vomiter.skeletonusescustombow.SkeletonUsesCustomBow;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class Tags {
     private static TagKey<Item> create(String path){
         return TagKey.create(
-                ForgeRegistries.ITEMS.getRegistryKey(),
+                BuiltInRegistries.ITEM.key(),
                 Helpers.id(SkeletonUsesCustomBow.MOD_ID, path)
         );
     }

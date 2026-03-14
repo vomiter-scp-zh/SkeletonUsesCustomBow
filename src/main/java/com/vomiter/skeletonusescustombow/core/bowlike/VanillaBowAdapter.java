@@ -15,6 +15,6 @@ public final class VanillaBowAdapter implements BowLikeAdapter {
     @Override
     public void release(ItemStack weapon, ServerLevel level, LivingEntity shooter, int useTicks) {
         BowItem bow = (BowItem) weapon.getItem();
-        bow.releaseUsing(weapon, level, shooter, bow.getUseDuration(weapon) - useTicks);
+        bow.releaseUsing(weapon, level, shooter, bow.getUseDuration(weapon, shooter) - useTicks);
     }
 }

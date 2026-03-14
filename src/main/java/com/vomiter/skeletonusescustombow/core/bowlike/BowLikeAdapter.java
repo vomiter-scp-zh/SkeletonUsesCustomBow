@@ -13,7 +13,7 @@ public interface BowLikeAdapter {
 
     /** 供 performRangedAttack 注入：實際觸發射擊 */
     default void release(ItemStack weapon, ServerLevel level, LivingEntity shooter, int useTicks){
-        weapon.getItem().releaseUsing(weapon, level, shooter, weapon.getUseDuration() - useTicks);
+        weapon.getItem().releaseUsing(weapon, level, shooter, weapon.getUseDuration(shooter) - useTicks);
     };
 }
 

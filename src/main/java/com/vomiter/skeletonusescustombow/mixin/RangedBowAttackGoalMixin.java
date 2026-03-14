@@ -6,7 +6,7 @@ import com.vomiter.skeletonusescustombow.data.BowDataManager;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,7 +48,7 @@ public class RangedBowAttackGoalMixin {
         if(!(mob instanceof AbstractSkeleton skeleton)) return; //only for abstract skeletons
         var weapon = BowLikeHelper.getBowLikeInHand(skeleton);
         if(weapon.isEmpty()) return; //only for our bow like
-        var weaponId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
+        var weaponId = BuiltInRegistries.ITEM.getKey(weapon.getItem());
         int chargeTime = BowDataManager.getChargeTime(weaponId);
         int actualUseTicks = mob.getTicksUsingItem();
         if(actualUseTicks >= chargeTime && chargeTime >= 20) return; //shoot naturally

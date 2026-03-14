@@ -6,14 +6,14 @@ import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeAdapters;
 import com.vomiter.skeletonusescustombow.core.bowlike.CataclysmBowAdapter;
 import com.vomiter.skeletonusescustombow.core.bowlike.VanillaBowAdapter;
 import com.vomiter.skeletonusescustombow.data.BowDataManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.slf4j.Logger;
 
 @Mod(SkeletonUsesCustomBow.MOD_ID)
@@ -23,11 +23,10 @@ public class SkeletonUsesCustomBow
     public static final String MOD_ID = "skeletonusescustombow";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public SkeletonUsesCustomBow(FMLJavaModLoadingContext context) {
-        IEventBus modBus = context.getModEventBus();
+    public SkeletonUsesCustomBow(ModContainer mod, IEventBus modBus) {
         modBus.addListener(this::commonSetup);
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        mod.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        IEventBus forgeBus = NeoForge.EVENT_BUS;
         forgeBus.addListener(this::onAddReloadListeners);
     }
 

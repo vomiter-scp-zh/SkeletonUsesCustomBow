@@ -7,6 +7,7 @@ import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeAdapters;
 import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeHelper;
 import com.vomiter.skeletonusescustombow.data.BowDataManager;
 import com.vomiter.skeletonusescustombow.util.ShootContext;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -73,7 +73,7 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         try {
             ShootContext.OWNER.set((AbstractSkeleton)(Object)this);
             sucb$player.readyToShoot();
-            var weaponId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
+            var weaponId = BuiltInRegistries.ITEM.getKey(weapon.getItem());
             BowLikeAdapters.release(weapon, serverLevel, sucb$player, BowDataManager.getChargeTime(weaponId)); // useTicks
             AExpWrapper.applyEffects(weapon, (AbstractSkeleton)(Object)this);
 
@@ -88,7 +88,7 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         if (this.level() != null && !this.level().isClientSide) {
             boolean shouldUseBow = !BowLikeHelper.getBowLikeInHand((AbstractSkeleton) (Object)this).isEmpty();
             ItemStack weapon = BowLikeHelper.getBowLikeInHand((AbstractSkeleton)(Object)this);
-            var weaponId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
+            var weaponId = BuiltInRegistries.ITEM.getKey(weapon.getItem());
             if(shouldUseBow){
                 this.goalSelector.removeGoal(meleeGoal);
                 int i = this.level().getDifficulty() != Difficulty.HARD? BowDataManager.getPostShotDelay(weaponId): BowDataManager.getPostShotDelayHardMode(weaponId);

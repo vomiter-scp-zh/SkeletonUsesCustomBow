@@ -4,12 +4,14 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+/*
 import org.infernalstudios.archeryexp.client.renderer.MaterialArrowRenderer;
 import org.infernalstudios.archeryexp.common.entities.ArcheryEntityTypes;
 import org.infernalstudios.archeryexp.common.items.ArcheryItems;
 import org.infernalstudios.archeryexp.util.BowUtil;
 import org.infernalstudios.archeryexp.util.mixinterfaces.IBowProperties;
+
+ */
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(targets = "org.infernalstudios.archeryexp.ArcheryExpansionForgeClient$ClientEvents", remap = false)
 public abstract class ArcheryExpansionClientEventsMixin {
 
+    /*
     @Inject(method = "onClientSetup", at = @At("HEAD"), cancellable = true)
     private static void sucb$enqueueClientSetup(FMLClientSetupEvent event, CallbackInfo ci) {
         ci.cancel();
@@ -51,4 +54,6 @@ public abstract class ArcheryExpansionClientEventsMixin {
             });
         });
     }
+
+     */
 }

@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public final class BowLikeAdapters {
 
         @Override
         public void release(ItemStack weapon, ServerLevel level, LivingEntity shooter, int useTicks) {
-            var itemId = ForgeRegistries.ITEMS.getKey(weapon.getItem());
+            var itemId = BuiltInRegistries.ITEM.getKey(weapon.getItem());
             SkeletonUsesCustomBow.LOGGER.error("BowLikeAdapters MISS: item={}, stack={}, shooter={}",
                     itemId, weapon, shooter.getName().getString());
 
@@ -45,7 +45,7 @@ public final class BowLikeAdapters {
         if (stack.isEmpty()) return null;
         if (stack.is(Tags.SKELETON_DO_NOT_USE)) return null;
         if (AExpWrapper.isAExpBow(stack)) return  null;
-        ResourceLocation rl = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        ResourceLocation rl = BuiltInRegistries.ITEM.getKey(stack.getItem());
         BowLikeAdapter cached = CACHE.get(rl);
         if(cached == MISS) return null;
         if (cached != null) return cached;
