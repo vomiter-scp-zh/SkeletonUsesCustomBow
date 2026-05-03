@@ -1,5 +1,6 @@
 package com.vomiter.skeletonusescustombow.mixin;
 
+import com.vomiter.skeletonusescustombow.SkeletonUsesCustomBow;
 import com.vomiter.skeletonusescustombow.compat.AExpWrapper;
 import com.vomiter.skeletonusescustombow.core.IFakePlayerHolder;
 import com.vomiter.skeletonusescustombow.core.SkeletonFakePlayer;
@@ -8,20 +9,21 @@ import com.vomiter.skeletonusescustombow.core.bowlike.BowLikeHelper;
 import com.vomiter.skeletonusescustombow.data.BowDataManager;
 import com.vomiter.skeletonusescustombow.util.ShootContext;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,6 +32,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 @Mixin(AbstractSkeleton.class)
 public abstract class AbstractSkeletonMixin extends Monster implements RangedAttackMob, IFakePlayerHolder {
@@ -104,5 +110,39 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         cir.setReturnValue(projectileWeaponItem instanceof BowItem);
     }
 
+    @Inject(method = "finalizeSpawn", at = @At("TAIL"))
+    private void sucb$replaceBow(ServerLevelAccessor level, DifficultyInstance difficultyInstance, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir){
+        float difficulty = difficultyInstance.getEffectiveDifficulty();
+        if(!((Object)this instanceof Skeleton skeleton)) return;
+
+        List<Map.Entry<ResourceLocation, BowDataManager.BowData>> entries = BowDataManager.getEntries()
+                .entrySet()
+                .stream()
+                .sorted(Comparator
+                        .<Map.Entry<ResourceLocation, BowDataManager.BowData>>comparingInt(entry -> entry.getValue().priority())
+                        .reversed()
+                )
+                .toList();
+
+        for (Map.Entry<ResourceLocation, BowDataManager.BowData> entry : entries) {
+            ResourceLocation bowId = entry.getKey();
+            BowDataManager.BowData data = entry.getValue();
+
+            if (difficulty < data.minDifficulty()) continue;
+            if (difficulty > data.maxDifficulty()) continue;
+            if (skeleton.getRandom().nextFloat() >= data.chance()) continue;
+
+            Item item = BuiltInRegistries.ITEM.get(bowId);
+            if (item == Items.AIR) {
+                SkeletonUsesCustomBow.LOGGER.warn("Skeleton bow data points to unknown item: {}", bowId);
+                continue;
+            }
+
+            skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
+            skeleton.setDropChance(EquipmentSlot.MAINHAND, data.dropChance());
+            return;
+        }
+
+    }
 
 }
