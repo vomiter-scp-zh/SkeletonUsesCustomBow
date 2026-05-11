@@ -97,7 +97,7 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
                 );
 
                 SkeletonUsesCustomBow.LOGGER.debug(
-                        "Loaded Bow data of {}. priority = {}; charge_time = {}; post_shot_delay = {}; post_shot_delay_hard_mode = {}; chance = {}; difficulty = [{} ~ {}]",
+                        "Loaded Bow data of {}. priority = {}; charge_time = {}; post_shot_delay = {}; post_shot_delay_hard_mode = {}; chance = {}; difficulty = [{} ~ {}]; drop_chance = {}",
                         rl,
                         priority,
                         chargeTime,
@@ -105,7 +105,8 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
                         postShotDelayHardMode,
                         chance,
                         minDifficulty,
-                        maxDifficulty
+                        maxDifficulty,
+                        dropChance
                 );
 
                 temp.put(rl, bowData);

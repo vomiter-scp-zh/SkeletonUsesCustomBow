@@ -15,10 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
@@ -144,6 +141,7 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
             }
 
             skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
+            skeleton.setDropChance(EquipmentSlot.MAINHAND, data.dropChance());
             return;
         }
 
