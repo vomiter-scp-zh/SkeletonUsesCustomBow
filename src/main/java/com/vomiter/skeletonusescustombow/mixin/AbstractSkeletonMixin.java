@@ -115,7 +115,6 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
     @Inject(method = "finalizeSpawn", at = @At("TAIL"))
     private void sucb$replaceBow(ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance, MobSpawnType p_32148_, SpawnGroupData p_32149_, CompoundTag p_32150_, CallbackInfoReturnable<SpawnGroupData> cir){
         float difficulty = difficultyInstance.getEffectiveDifficulty();
-        if(!((Object)this instanceof Skeleton skeleton)) return;
 
         List<Map.Entry<ResourceLocation, BowDataManager.BowData>> entries = BowDataManager.getEntries()
                 .entrySet()
@@ -129,10 +128,12 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
         for (Map.Entry<ResourceLocation, BowDataManager.BowData> entry : entries) {
             ResourceLocation bowId = entry.getKey();
             BowDataManager.BowData data = entry.getValue();
-
+            boolean entityIncluded = data.entityTypes().contains(getType());
+            boolean tagIncluded = data.entityTypeTags().stream().anyMatch(getType()::is);
+            if (!entityIncluded && !tagIncluded) continue;
             if (difficulty < data.minDifficulty()) continue;
             if (difficulty > data.maxDifficulty()) continue;
-            if (skeleton.getRandom().nextFloat() >= data.chance()) continue;
+            if (getRandom().nextFloat() >= data.chance()) continue;
 
             Item item = BuiltInRegistries.ITEM.get(bowId);
             if (item == Items.AIR) {
@@ -140,8 +141,8 @@ public abstract class AbstractSkeletonMixin extends Monster implements RangedAtt
                 continue;
             }
 
-            skeleton.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
-            skeleton.setDropChance(EquipmentSlot.MAINHAND, data.dropChance());
+            setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(item));
+            setDropChance(EquipmentSlot.MAINHAND, data.dropChance());
             return;
         }
 

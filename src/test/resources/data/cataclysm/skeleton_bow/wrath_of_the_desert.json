@@ -1,0 +1,5 @@
+{
+  "priority": 7,
+  "chance": 1,
+  "entity_types": ["minecraft:wither_skeleton"]
+}
