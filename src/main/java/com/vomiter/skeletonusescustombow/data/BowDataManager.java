@@ -1,19 +1,17 @@
 package com.vomiter.skeletonusescustombow.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.vomiter.skeletonusescustombow.SkeletonUsesCustomBow;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class BowDataManager extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().create();
@@ -23,6 +21,9 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
     private static final int DEFAULT_CHARGE_TIME = 20;
     private static final int DEFAULT_POST_SHOT_DELAY = 40;
     private static final int DEFAULT_POST_SHOT_DELAY_HARD_MODE = 20;
+    private static final List<EntityType<?>> DEFAULT_ENTITY_TYPES = List.of(EntityType.SKELETON);
+    private static final List<TagKey<EntityType<?>>> DEFAULT_ENTITY_TYPE_TAGS = List.of();
+
 
     /*
      * Work as intended:
@@ -85,6 +86,63 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
                     maxDifficulty = oldMin;
                 }
 
+                List<EntityType<?>> entityTypes = new ArrayList<>();
+                List<TagKey<EntityType<?>>> entityTypeTags = new ArrayList<>();
+                JsonArray entityArray = obj.getAsJsonArray("entity_types");
+
+                if (entityArray == null) {
+                    entityTypes.addAll(DEFAULT_ENTITY_TYPES);
+                } else {
+                    for (JsonElement element : entityArray) {
+                        if (!element.isJsonPrimitive()
+                                || !element.getAsJsonPrimitive().isString()) {
+                            SkeletonUsesCustomBow.LOGGER.warn(
+                                    "Invalid entity_types entry {} in {}: expected string",
+                                    element, rl
+                            );
+                            continue;
+                        }
+
+                        String value = element.getAsString();
+
+                        if (value.startsWith("#")) {
+                            ResourceLocation id = ResourceLocation.tryParse(value.substring(1));
+
+                            if (id == null) {
+                                SkeletonUsesCustomBow.LOGGER.warn(
+                                        "Invalid entity type tag '{}' in {}",
+                                        value, rl
+                                );
+                                continue;
+                            }
+
+                            entityTypeTags.add(
+                                    TagKey.create(BuiltInRegistries.ENTITY_TYPE.key(), id)
+                            );
+                        } else {
+                            ResourceLocation id = ResourceLocation.tryParse(value);
+
+                            if (id == null) {
+                                SkeletonUsesCustomBow.LOGGER.warn(
+                                        "Invalid entity type id '{}' in {}",
+                                        value, rl
+                                );
+                                continue;
+                            }
+
+                            if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
+                                SkeletonUsesCustomBow.LOGGER.warn(
+                                        "Unknown entity type '{}' in {}",
+                                        id, rl
+                                );
+                                continue;
+                            }
+
+                            entityTypes.add(BuiltInRegistries.ENTITY_TYPE.get(id));
+                        }
+                    }
+                }
+
                 BowData bowData = buildData(
                         priority,
                         chargeTime,
@@ -93,7 +151,9 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
                         chance,
                         minDifficulty,
                         maxDifficulty,
-                        dropChance
+                        dropChance,
+                        entityTypes,
+                        entityTypeTags
                 );
 
                 SkeletonUsesCustomBow.LOGGER.debug(
@@ -176,8 +236,7 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
             int priority,
             int chargeTime,
             int postShotDelay,
-            int postShotDelayHardMode
-    ) {
+            int postShotDelayHardMode){
         return new BowData(
                 priority,
                 chargeTime,
@@ -186,7 +245,9 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
                 DEFAULT_CHANCE,
                 DEFAULT_MIN_DIFFICULTY,
                 DEFAULT_MAX_DIFFICULTY,
-                DEFAULT_DROP_CHANCE
+                DEFAULT_DROP_CHANCE,
+                DEFAULT_ENTITY_TYPES,
+                DEFAULT_ENTITY_TYPE_TAGS
         );
     }
 
@@ -198,8 +259,8 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
             float chance,
             float minDifficulty,
             float maxDifficulty,
-            float dropChance
-    ) {
+            float dropChance,
+            List<EntityType<?>> entityTypes, List<TagKey<EntityType<?>>> entityTypeTags) {
         return new BowData(
                 priority,
                 chargeTime,
@@ -208,7 +269,9 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
                 chance,
                 minDifficulty,
                 maxDifficulty,
-                dropChance
+                dropChance,
+                entityTypes,
+                entityTypeTags
         );
     }
 
@@ -240,7 +303,9 @@ public class BowDataManager extends SimpleJsonResourceReloadListener {
             float chance,
             float minDifficulty,
             float maxDifficulty,
-            float dropChance
+            float dropChance,
+            List<EntityType<?>> entityTypes,
+            List<TagKey<EntityType<?>>> entityTypeTags
     ) {
     }
 }
